@@ -4,6 +4,8 @@ _Due to two years of negligence and low prioritization on [improving the WP CLI]
 
 ## Commands
 
+Example: `wp action-scheduler action get 53281`
+
 - `action`
   - `cancel`
   - `create`
@@ -20,5 +22,4 @@ _Due to two years of negligence and low prioritization on [improving the WP CLI]
   - `id`/`ids`
   - `status`/`stati`/`statuses`
   - `title`/`titles`
-- `version`
 - `status`
