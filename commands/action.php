@@ -174,6 +174,9 @@ class Action extends \WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
+	 * [--<field>=<value>]
+	 * : One or more args to query scheduled actions.
+	 *
 	 * [--fields=<fields>]
 	 * : A comma separated list of fields.
 	 *
@@ -215,24 +218,27 @@ class Action extends \WP_CLI_Command {
 	 */
 	public function list( $args, $assoc_args ) {
 		$store = \ActionScheduler::store();
-		$total_count = (int) $store->query_actions( array(), 'count' );
 
-		if ( 0 === $total_count ) {
+		if ( 0 === absint( $store->query_actions( array(), 'count' ) ) ) {
 			\WP_CLI::error( 'No actions to list.' );
 		}
 
-		$fields   = \WP_CLI\Utils\get_flag_value( $assoc_args, 'fields', array( 'hook', 'args', 'status', 'date' ) );
-		$per_page = \WP_CLI\Utils\get_flag_value( $assoc_args, 'per-page', 10 );
-		$offset   = \WP_CLI\Utils\get_flag_value( $assoc_args, 'offset', 0 );
+		$fields = \WP_CLI\Utils\get_flag_value( $assoc_args, 'fields', array( 'hook', 'args', 'status', 'date' ) );
 
 		if ( is_string( $fields ) ) {
 			$fields = explode( ',', $fields );
 		}
-
+		
+		$defaults = array(
+			'per-page' => 10,
+			'offset'   => 0,
+		);
+		
+		$query_args = wp_parse_args( $assoc_args, $defaults );
 		$formatter = new \WP_CLI\Formatter( $assoc_args, $fields );
 
 		if ( empty( $args[1] ) ) {
-			$action_ids = $store->query_actions( array( 'per_page' => $per_page, 'offset' => $offset ) );
+			$action_ids = $store->query_actions( $query_args );
 		} else {
 			$action_ids = array_unique( array_map( 'absint', explode( ',', $args[1] ) ) );
 		}
@@ -245,7 +251,6 @@ class Action extends \WP_CLI_Command {
 			return;
 		}
 
-		$progress_bar = \WP_CLI\Utils\make_progress_bar( 'Collecting data:', count( $action_ids ) * count( $fields ) );
 		$rows = array();
 
 		$action_ids = array_map( 'intval', $action_ids );
@@ -290,18 +295,12 @@ class Action extends \WP_CLI_Command {
 						break;
 
 				}
-
-				$progress_bar->tick();
 			}
 
 			$rows[] = $row;
 		}
 
-		$progress_bar->finish();
 		$formatter->display_items( $rows );
-
-		if ( 'table' === $formatter->format )
-			\WP_CLI::success( sprintf( 'Displaying %d - %d of %d actions.', $offset + 1, min( ( $offset + $per_page ), $total_count ), $total_count ) );
 	}
 
 	/**
