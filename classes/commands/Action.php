@@ -29,6 +29,7 @@ class Action {
 	 *
 	 * @param array $args
 	 * @param array $assoc_args
+	 * @uses \AS_CLI\Commands\Action\Cancel::execute()
 	 * @return void
 	 */
 	function cancel( array $args, array $assoc_args ) : void {
@@ -46,7 +47,7 @@ class Action {
 	 * : Name of the action hook.
 	 *
 	 * <start>
-	 * : The Unix timestamp representing the date you want the action to start.
+	 * : A unix timestamp representing the date you want the action to start. Also 'async' or 'now' to enqueue an async action.
 	 *
 	 * [--args=<args>]
 	 * : JSON object of arguments to pass to callbacks when the hook triggers.
@@ -72,15 +73,23 @@ class Action {
 	 * default: 0
 	 * ---
 	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp ascli action create hook_async async
+	 *     wp ascli action create hook_single 1627147598
+	 *     wp ascli action create hook_recurring 1627148188 --interval=5
+	 *     wp ascli action create hook_cron 1627147655 --cron='5 4 * * *'
+	 *
 	 * @param array $args
 	 * @param array $assoc_args
-	 * @uses $this->generate()
+	 * @uses \AS_CLI\Commands\Action\Create::execute()
 	 *
 	 * @return void
 	 */
 	function create( array $args, array $assoc_args ) : void {
-		$assoc_args['count'] = 0;
-		$this->generate( $args, $assoc_args );
+		require_once 'Action_Create.php';
+		$command = new Create( $args, $assoc_args );
+		$command->execute();
 	}
 
 	/**
@@ -94,22 +103,22 @@ class Action {
 	 * <start>
 	 * : The Unix timestamp representing the date you want the action to start.
 	 *
-	 * [--args=<args>]
-	 * : JSON object of arguments to pass to callbacks when the hook triggers.
-	 * ---
-	 * default: []
-	 * ---
-	 *
-	 * [--count=<count>]
+	 * --count=<count>
 	 * : Number of actions to create.
 	 * ---
 	 * default: 0
 	 * ---
 	 *
-	 * [--cron=<cron>]
-	 * : A cron-like schedule string (https://crontab.guru/).
+	 * --interval=<interval>
+	 * : Number of seconds to wait between runs.
 	 * ---
-	 * default: ''
+	 * default: 0
+	 * ---
+	 *
+	 * [--args=<args>]
+	 * : JSON object of arguments to pass to callbacks when the hook triggers.
+	 * ---
+	 * default: []
 	 * ---
 	 *
 	 * [--group=<group>]
@@ -118,11 +127,14 @@ class Action {
 	 * default: ''
 	 * ---
 	 *
-	 * [--interval=<interval>]
-	 * : Number of seconds to wait between runs.
-	 * ---
-	 * default: 0
-	 * ---
+	 * ## EXAMPLES
+	 *
+	 *     wp ascli action create test_multiple 1627147598 --count=5 --interval=5
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
+	 * @uses \AS_CLI\Commands\Action\Generate::execute()
+	 * @return void
 	 */
 	function generate( array $args, array $assoc_args ) : void {
 		require_once 'Action_Generate.php';

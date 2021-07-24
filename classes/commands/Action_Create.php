@@ -4,14 +4,18 @@ namespace AS_CLI\Commands\Action;
 use AS_CLI\Commands\Command_Abstract;
 use function \WP_CLI\Utils\get_flag_value;
 
-class Generate extends Command_Abstract {
+class Create extends Command_Abstract {
 
-	const COMMAND = 'ascli action generate';
+	const ASYNC_OPTS = array( 'async', 'now', 0 );
+	const COMMAND = 'ascli action create';
 
 	/**
 	 * Execute command.
 	 *
-	 * @uses $this->generate()
+	 * @uses as_schedule_single_action()
+	 * @uses as_enqueue_async_action()
+	 * @uses as_schedule_recurring_action()
+	 * @uses as_schedule_cron_action()
 	 * @uses $this->print_error()
 	 * @uses $this->print_success()
 	 * @return void
@@ -22,27 +26,54 @@ class Generate extends Command_Abstract {
 		$callback_args  = get_flag_value( $this->assoc_args, 'args', array() );
 		$group          = get_flag_value( $this->assoc_args, 'group', '' );
 		$interval       = absint( get_flag_value( $this->assoc_args, 'interval', 0 ) );
-		$count          = absint( get_flag_value( $this->assoc_args, 'count', 0 ) );
+		$cron           = get_flag_value( $this->assoc_args, 'cron', '' );
 
 		if ( !empty( $callback_args ) )
 			$callback_args = json_decode( $callback_args, true );
 
-		$schedule_start = as_get_datetime_object( $schedule_start );
-
 		$function_args = array(
-			'start'         => $schedule_start->format( 'U' ),
+			'start'         => 'async',
+			'cron'          => $cron,
 			'interval'      => $interval,
-			'count'         => $count,
 			'hook'          => $hook,
 			'callback_args' => $callback_args,
 			'group'         => $group,
 		);
 
-		$action_type   = 'single';
+		// Generate schedule start if appropriate.
+		if ( !in_array( $schedule_start, static::ASYNC_OPTS ) ) {
+			$schedule_start = as_get_datetime_object( $schedule_start );
+			$function_args['start'] = $schedule_start->format( 'U' );
+		}
+
+		// Default to creating single action.
+		$action_type = 'single';
+		$function    = 'as_schedule_single_action';
+
+		// Enqueue async action.
+		if ( 'async' === $function_args['start'] ) {
+			$action_type = 'async';
+			$function    = 'as_enqueue_async_action';
+
+			$function_args = array_filter( $function_args, static function( string $key ) : bool {
+				return in_array( $key, array( 'hook', 'callback_args', 'group' ) );
+			}, ARRAY_FILTER_USE_KEY );
+
+		// Creating recurring action.
+		} else if ( !empty( $interval ) ) {
+			$action_type = 'recurring';
+			$function    = 'as_schedule_recurring_action';
+
+		// Creating cron action.
+		} else if ( !empty( $cron ) ) {
+			$action_type = 'cron';
+			$function    = 'as_schedule_cron_action';
+		}
+
 		$function_args = array_values( array_filter( $function_args ) );
 
 		try {
-			$actions_added = $this->generate( $function_args );
+			$actions_added = call_user_func_array( $function, $function_args );
 		} catch ( \Exception $e ) {
 			$this->print_error( $e );
 		}
@@ -53,40 +84,11 @@ class Generate extends Command_Abstract {
 	}
 
 	/**
-	 * Schedule multiple single actions.
-	 *
-	 * @param int $schedule_start Starting timestamp of first action.
-	 * @param int $interval How long to wait between runs.
-	 * @param int $count Limit number of actions to schedule.
-	 * @param string $hook The hook to trigger.
-	 * @param array $args Arguments to pass when the hook triggers.
-	 * @param string $group The group to assign this job to.
-	 * @uses as_schedule_single_action()
-	 * @return int[] IDs of actions added.
-	 */
-	protected function generate( int $schedule_start, int $interval, int $count, string $hook, array $args = array(), string $group = '' ) : array {
-		$actions_added = array();
-
-		$progress_bar = \WP_CLI\Utils\make_progress_bar(
-			sprintf( _n( 'Creating %d action', 'Creating %d actions', $count, 'action-scheduler' ), number_format_i18n( $count ) ),
-			$count
-		);
-
-		for ( $i = 0; $i < $count; $i++ ) {
-			$actions_added[] = as_schedule_single_action( $schedule_start + ( $i * $interval ), $hook, $args, $group );
-			$progress_bar->tick();
-		}
-
-		$progress_bar->finish();
-
-		return $actions_added;
-	}
-
-	/**
 	 * Print a success message with the action ID.
 	 *
 	 * @param int $action_added
 	 * @param string $action_type
+	 *
 	 * @return void
 	 */
 	protected function print_success( $actions_added, $action_type ) : void {
@@ -104,7 +106,9 @@ class Generate extends Command_Abstract {
 	 * Convert an exception into a WP CLI error.
 	 *
 	 * @param \Exception $e The error object.
+	 *
 	 * @throws \WP_CLI\ExitException
+	 *
 	 * @return void
 	 */
 	protected function print_error( \Exception $e ) : void {

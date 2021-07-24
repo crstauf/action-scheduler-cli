@@ -11,13 +11,20 @@ class Cancel extends Command_Abstract {
 	/**
 	 * Execute command.
 	 *
+	 * @uses as_unschedule_action()
+	 * @uses as_unschedule_all_actions()
+	 * @uses $this->print_error()
+	 * @uses $this->print_success()
 	 * @return void
 	 */
 	public function execute() : void {
-		$hook      = $this->args[0];
-		$group     = $this->args[1] ?? '';
-		$hook_args = get_flag_value( $this->assoc_args, 'args', array() );
-		$all       = get_flag_value( $this->assoc_args, 'all' );
+		$hook          = $this->args[0];
+		$group         = $this->args[1] ?? null;
+		$callback_args = get_flag_value( $this->assoc_args, 'args', null );
+		$all           = get_flag_value( $this->assoc_args, 'all' );
+
+		if ( !empty( $callback_args ) )
+			$callback_args = json_decode( $callback_args, true );
 
 		$function_name = 'as_unschedule_action';
 		$multiple      = false;
@@ -28,7 +35,7 @@ class Cancel extends Command_Abstract {
 		}
 
 		try {
-			call_user_func( $function_name, $hook, $hook_args, $group );
+			call_user_func( $function_name, $hook, $callback_args, $group );
 		} catch ( \Exception $e ) {
 			$this->print_error( $e, $multiple );
 		}
