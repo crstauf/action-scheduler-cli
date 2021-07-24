@@ -2,7 +2,7 @@
 
 namespace AS_CLI\Commands;
 
-abstract class Command_Abstract {
+abstract class Command_Abstract extends \WP_CLI_Command {
 
 	protected $args;
 	protected $assoc_args;

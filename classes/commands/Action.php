@@ -142,4 +142,40 @@ class Action {
 		$command->execute();
 	}
 
+	/**
+	 * Get details about a scheduled action.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <id>
+	 * : The ID of the action to get.
+	 *
+	 * [--field=<field>]
+	 * : Instead of returning the whole action, returns the value of a single field.
+	 *
+	 * [--fields=<fields>]
+	 * : Limit the output to specific fields. Defaults to all fields.
+	 *
+	 * [--format=<format>]
+	 * : Render output in a particular format.
+	 * ---
+	 * default: table
+	 * options:
+	 *   - table
+	 *   - csv
+	 *   - json
+	 *   - yaml
+	 * ---
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
+	 * @uses \AS_CLI\Commands\Action\Get::execute()
+	 * @return void
+	 */
+	function get( array $args, array $assoc_args ) : void {
+		require_once 'Action_Get.php';
+		$command = new Get( $args, $assoc_args );
+		$command->execute();
+	}
+
 }
