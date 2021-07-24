@@ -1,21 +1,28 @@
-<?php
+<?php declare( strict_types=1 );
+/**
+ * Plugin Name: Action Scheduler CLI
+ * Description: Registers WP-CLI commands for Action Scheduler plugin.
+ * Version: 0.1.0
+ * Author: Caleb Stauffer
+ * Author URI: https://develop.calebstauffer.com
+ */
 
-namespace ActionSchedulerCLI;
+namespace AS_CLI;
 
 if ( !defined( 'WP_CLI' ) || !WP_CLI )
 	return;
-	
-add_action( 'plugins_loaded', function() {
-	
-	if ( !class_exists( 'ActionScheduler' ) )
-		return;
-	
-	require_once 'commands/action.php';
-	require_once 'commands/generate.php';
 
-	\WP_CLI::add_command( 'action-scheduler action',   Commands\Action::class );
-	\WP_CLI::add_command( 'action-scheduler generate', Commands\Generate::class );
-	
+/**
+ * Action: action_scheduler_pre_init
+ *
+ * Only load if Action Scheduler is active.
+ *
+ * @uses Plugin::init()
+ * @return void
+ */
+add_action( 'action_scheduler_pre_init', static function() : void {
+
+	require_once 'classes/Plugin.php';
+	Plugin::init( __FILE__ );
+
 } );
-
-?>
