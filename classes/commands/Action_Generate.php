@@ -30,7 +30,7 @@ class Generate extends Command_Abstract {
 		$schedule_start = as_get_datetime_object( $schedule_start );
 
 		$function_args = array(
-			'start'         => $schedule_start->format( 'U' ),
+			'start'         => absint( $schedule_start->format( 'U' ) ),
 			'interval'      => $interval,
 			'count'         => $count,
 			'hook'          => $hook,
@@ -42,7 +42,7 @@ class Generate extends Command_Abstract {
 		$function_args = array_values( array_filter( $function_args ) );
 
 		try {
-			$actions_added = $this->generate( $function_args );
+			$actions_added = $this->generate( ...$function_args );
 		} catch ( \Exception $e ) {
 			$this->print_error( $e );
 		}

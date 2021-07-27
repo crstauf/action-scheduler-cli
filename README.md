@@ -8,6 +8,7 @@ _Due to two years of negligence and low prioritization on [improving the WP CLI]
 |:--|:--|
 |`ascli action cancel`|Cancels an existing scheduled action.|
 |`ascli action create`|Creates a new scheduled action.|
+|`ascli action delete`|Deletes scheduled action(s).|
 |`ascli action generate`|Generates some scheduled actions.|
 |`ascli action get`|Get details about a scheduled action.|
 |`ascli action list`|Gets a list of scheduled actions.|
