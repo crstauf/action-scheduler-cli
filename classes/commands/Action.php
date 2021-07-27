@@ -184,6 +184,8 @@ class Action {
 	 * Display actions based on all arguments supported by
 	 * [as_get_scheduled_actions()](https://actionscheduler.org/api/#function-reference--as_get_scheduled_actions).
 	 *
+	 * ## OPTIONS
+	 *
 	 * [--<field>=<value>]
 	 * : One or more arguments to pass to as_get_scheduled_actions().
 	 *
@@ -230,6 +232,30 @@ class Action {
 	function list( array $args, array $assoc_args ) : void {
 		require_once 'Action_List.php';
 		$command = new Action_List( $args, $assoc_args );
+		$command->execute();
+	}
+
+	/**
+	 * Run existing scheduled action.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <id>
+	 * : The ID of the action to run.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Run the action with id 100
+	 *     $ wp ascli action run 100
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
+	 * @uses \AS_CLI\Commands\Action\Run::execute()
+	 * @return void
+	 */
+	function run( array $args, array $assoc_args ) : void {
+		require_once 'Action_Run.php';
+		$command = new Run( $args, $assoc_args );
 		$command->execute();
 	}
 
