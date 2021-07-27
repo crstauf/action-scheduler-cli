@@ -240,13 +240,19 @@ class Action {
 	 *
 	 * ## OPTIONS
 	 *
-	 * <id>
-	 * : The ID of the action to run.
+	 * <id>...
+	 * : One or more IDs of actions to run.
 	 *
 	 * ## EXAMPLES
 	 *
 	 *     # Run the action with id 100
 	 *     $ wp ascli action run 100
+	 *
+	 *     # Run the actions with ids 100 and 200
+	 *     $ wp ascli action run 100 200
+	 *
+	 *     # Run the first five pending actions in 'ascli' group
+	 *     $ wp ascli action run $( wp ascli action list --status=pending --group=ascli --format=ids )
 	 *
 	 * @param array $args
 	 * @param array $assoc_args
