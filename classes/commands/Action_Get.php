@@ -27,7 +27,7 @@ class Get extends Command_Abstract {
 			'status'         => $store->get_status( $action_id ),
 			'args'           => $action->get_args(),
 			'group'          => $action->get_group(),
-			'recurring'      => $action->get_schedule()->is_recurring(),
+			'recurring'      => $action->get_schedule()->is_recurring() ? 'yes' : 'no',
 			'scheduled_date' => $this->get_schedule_display_string( $action->get_schedule() ),
 			'log_entries'    => array(),
 		);

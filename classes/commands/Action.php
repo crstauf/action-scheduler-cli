@@ -178,4 +178,59 @@ class Action {
 		$command->execute();
 	}
 
+	/**
+	 * Get a list of scheduled actions.
+	 *
+	 * Display actions based on all arguments supported by
+	 * [as_get_scheduled_actions()](https://actionscheduler.org/api/#function-reference--as_get_scheduled_actions).
+	 *
+	 * [--<field>=<value>]
+	 * : One or more arguments to pass to as_get_scheduled_actions().
+	 *
+	 * [--field=<field>]
+	 * : Prints the value of a single property for each action.
+	 *
+	 * [--fields=<fields>]
+	 * : Limit the output to specific object properties.
+	 *
+	 * [--format=<format>]
+	 * : Render output in a particular format.
+	 * ---
+	 * default: table
+	 * options:
+	 *   - table
+	 *   - csv
+	 *   - ids
+	 *   - json
+	 *   - count
+	 *   - yaml
+	 * ---
+	 *
+	 * ## AVAILABLE FIELDS
+	 *
+	 * These fields will be displayed by default for each action:
+	 *
+	 * * id
+	 * * hook
+	 * * status
+	 * * group
+	 * * recurring
+	 * * scheduled_date
+	 *
+	 * These fields are optionally available:
+	 *
+	 * * args
+	 * * log_entries
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
+	 * @uses \AS_CLI\Commands\Action\Action_List::execute()
+	 * @return void
+	 */
+	function list( array $args, array $assoc_args ) : void {
+		require_once 'Action_List.php';
+		$command = new Action_List( $args, $assoc_args );
+		$command->execute();
+	}
+
 }
