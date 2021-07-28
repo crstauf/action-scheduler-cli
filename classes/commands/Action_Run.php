@@ -6,6 +6,8 @@ use function \WP_CLI\Utils\get_flag_value;
 
 class Run extends Command_Abstract {
 
+	const COMMAND = 'wp ascli action run';
+
 	protected $action_ids = array();
 	protected $action_counts = array(
 		'executed' => 0,

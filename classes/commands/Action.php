@@ -93,6 +93,36 @@ class Action {
 	}
 
 	/**
+	 * Delete existing scheduled action(s).
+	 *
+	 * ## OPTIONS
+	 *
+	 * <id>...
+	 * : One or more IDs of actions to delete.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Delete the action with id 100
+	 *     $ wp ascli action delete 100
+	 *
+	 *     # Delete the actions with ids 100 and 200
+	 *     $ wp ascli action delete 100 200
+	 *
+	 *     # Delete the first five pending actions in 'ascli' group
+	 *     $ wp ascli action delete $( wp ascli action list --status=pending --group=ascli --format=ids )
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
+	 * @uses \AS_CLI\Commands\Action\Delete::execute()
+	 * @return void
+	 */
+	function delete( array $args, array $assoc_args ) : void {
+		require_once 'Action_Delete.php';
+		$command = new Delete( $args, $assoc_args );
+		$command->execute();
+	}
+
+	/**
 	 * Generates some scheduled actions.
 	 *
 	 * ## OPTIONS
@@ -236,7 +266,7 @@ class Action {
 	}
 
 	/**
-	 * Run existing scheduled action.
+	 * Run existing scheduled action(s).
 	 *
 	 * ## OPTIONS
 	 *
