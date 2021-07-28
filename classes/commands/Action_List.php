@@ -6,8 +6,7 @@ use function \WP_CLI\Utils\get_flag_value;
 
 class Action_List extends Command_Abstract {
 
-	const COMMAND = 'ascli action list';
-	const DATE_FORMAT = 'Y-m-d H:i:s O';
+	const COMMAND = 'wp ascli action list';
 	const PARAMETERS = array(
 		'hook',
 		'args',
@@ -98,43 +97,6 @@ class Action_List extends Command_Abstract {
 				$formatter->display_items( $actions_arr );
 				break;
 
-		}
-	}
-
-	/**
-	 * Get the scheduled date in a human friendly format.
-	 *
-	 * @see \ActionScheduler_ListTable::get_schedule_display_string()
-	 * @param ActionScheduler_Schedule $schedule
-	 * @return string
-	 */
-	protected function get_schedule_display_string( \ActionScheduler_Schedule $schedule ) {
-
-		$schedule_display_string = '';
-
-		if ( ! $schedule->get_date() ) {
-			return '0000-00-00 00:00:00';
-		}
-
-		$next_timestamp = $schedule->get_date()->getTimestamp();
-
-		$schedule_display_string .= $schedule->get_date()->format( static::DATE_FORMAT );
-
-		return $schedule_display_string;
-	}
-
-	/**
-	 * Transforms arguments with '__' from CSV into expected arrays.
-	 *
-	 * @see \WP_CLI\CommandWithDBObject::process_csv_arguments_to_arrays()
-	 * @link https://github.com/wp-cli/entity-command/blob/6e0e77a297eefa3329b94bec16c15cf7528d343f/src/WP_CLI/CommandWithDBObject.php
-	 * @return void
-	 */
-	protected function process_csv_arguments_to_arrays() : void {
-		foreach ( $this->assoc_args as $k => $v ) {
-			if ( false !== strpos( $k, '__' ) ) {
-				$this->assoc_args[ $k ] = explode( ',', $v );
-			}
 		}
 	}
 

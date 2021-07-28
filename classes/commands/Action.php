@@ -265,6 +265,12 @@ class Action {
 		$command->execute();
 	}
 
+	function next( array $args, array $assoc_args ) : void {
+		require_once 'Action_Next.php';
+		$command = new Next( $args, $assoc_args );
+		$command->execute();
+	}
+
 	/**
 	 * Run existing scheduled action(s).
 	 *

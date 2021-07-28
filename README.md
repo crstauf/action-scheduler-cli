@@ -12,8 +12,8 @@ _Due to two years of negligence and low prioritization on [improving the WP CLI]
 |`ascli action generate`|Generates some scheduled actions.|
 |`ascli action get`|Get details about a scheduled action.|
 |`ascli action list`|Gets a list of scheduled actions.|
+|`ascli action next`|Get the next scheduled action.|
 |`ascli action run`|Run existing scheduled action.|
-|`ascli action search`|Search for existing scheduled action.|
 |`ascli query actions`||
 |`ascli query groups`||
 |`ascli query hooks`||

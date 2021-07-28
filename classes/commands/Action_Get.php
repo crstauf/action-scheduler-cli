@@ -6,8 +6,7 @@ use function \WP_CLI\Utils\get_flag_value;
 
 class Get extends Command_Abstract {
 
-	const COMMAND = 'ascli action get';
-	const DATE_FORMAT = 'Y-m-d H:i:s O';
+	const COMMAND = 'wp ascli action get';
 
 	/**
 	 * Execute command.
@@ -19,7 +18,6 @@ class Get extends Command_Abstract {
 		$store     = \ActionScheduler::store();
 		$logger    = \ActionScheduler::logger();
 		$action    = $store->fetch_action( $action_id );
-
 
 		$action_arr = array(
 			'id'             => $this->args[0],
@@ -46,52 +44,6 @@ class Get extends Command_Abstract {
 
 		$formatter = new \WP_CLI\Formatter( $this->assoc_args, $fields );
 		$formatter->display_item( $action_arr );
-	}
-
-	/**
-	 * Get the scheduled date in a human friendly format.
-	 *
-	 * @see \ActionScheduler_ListTable::get_schedule_display_string()
-	 * @param ActionScheduler_Schedule $schedule
-	 * @return string
-	 */
-	protected function get_schedule_display_string( \ActionScheduler_Schedule $schedule ) {
-
-		$schedule_display_string = '';
-
-		if ( ! $schedule->get_date() ) {
-			return '0000-00-00 00:00:00';
-		}
-
-		$next_timestamp = $schedule->get_date()->getTimestamp();
-
-		$schedule_display_string .= $schedule->get_date()->format( static::DATE_FORMAT );
-
-		return $schedule_display_string;
-	}
-
-	/**
-	 * Returns the recurrence of an action or 'Non-repeating'. The output is human readable.
-	 *
-	 * @see \ActionScheduler_ListTable::get_recurrence()
-	 * @param ActionScheduler_Action $action
-	 *
-	 * @return string
-	 */
-	protected function get_recurrence( $action ) {
-		$schedule = $action->get_schedule();
-		if ( $schedule->is_recurring() ) {
-			$recurrence = $schedule->get_recurrence();
-
-			if ( is_numeric( $recurrence ) ) {
-				/* translators: %s: time interval */
-				return sprintf( __( 'Every %s', 'action-scheduler' ), self::human_interval( $recurrence ) );
-			} else {
-				return $recurrence;
-			}
-		}
-
-		return __( 'Non-repeating', 'action-scheduler' );
 	}
 
 }
