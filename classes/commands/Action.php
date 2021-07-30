@@ -265,6 +265,54 @@ class Action {
 		$command->execute();
 	}
 
+	/**
+	 * Get the next scheduled action.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <id>
+	 * : The hook of the next scheduled action.
+	 *
+	 * [--field=<field>]
+	 * : Prints the value of a single property for the action.
+	 *
+	 * [--fields=<fields>]
+	 * : Limit the output to specific object properties.
+	 *
+	 * [--format=<format>]
+	 * : Render output in a particular format.
+	 * ---
+	 * default: table
+	 * options:
+	 *   - table
+	 *   - csv
+	 *   - ids
+	 *   - json
+	 *   - count
+	 *   - yaml
+	 * ---
+	 *
+	 * ## AVAILABLE FIELDS
+	 *
+	 * These fields will be displayed by default for the action:
+	 *
+	 * * id
+	 * * hook
+	 * * status
+	 * * group
+	 * * recurring
+	 * * scheduled_date
+	 *
+	 * These fields are optionally available:
+	 *
+	 * * args
+	 * * log_entries
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
+	 * @uses \AS_CLI\Commands\Action\Next::execute()
+	 * @return void
+	 */
 	function next( array $args, array $assoc_args ) : void {
 		require_once 'Action_Next.php';
 		$command = new Next( $args, $assoc_args );
