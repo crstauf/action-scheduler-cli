@@ -9,9 +9,6 @@
 
 namespace AS_CLI;
 
-if ( !defined( 'WP_CLI' ) || !WP_CLI )
-	return;
-
 /**
  * Action: action_scheduler_pre_init
  *

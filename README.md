@@ -14,10 +14,9 @@ _Due to two years of negligence and low prioritization on [improving the WP CLI]
 |`ascli action list`|Gets a list of scheduled actions.|
 |`ascli action next`|Get the next scheduled action.|
 |`ascli action run`|Run existing scheduled action.|
-|`ascli query actions`||
-|`ascli query groups`||
-|`ascli query hooks`||
-|`ascli query ids`||
-|`ascli query statuses`||
-|`ascli status`|- List of actions according to status<br />- Active version<br />- Active data store|
-|`aslic version`|Active version.|
+|`ascli system data-store`|Get current data store.|
+|`ascli system runner`|Get current runner.|
+|`ascli system runner disable`|Disable runner.|
+|`ascli system runner enable`|Enable runner.|
+|`ascli system status`|- List of actions according to status<br />- Active version<br />- Active data store class<br />- Active runner class|
+|`ascli system version`|Lists active version(s).|
