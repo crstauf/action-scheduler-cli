@@ -99,6 +99,9 @@ class Action {
 	 *
 	 * <id>...
 	 * : One or more IDs of actions to delete.
+	 * ---
+	 * default: 0
+	 * ---
 	 *
 	 * ## EXAMPLES
 	 *
@@ -179,6 +182,9 @@ class Action {
 	 *
 	 * <id>
 	 * : The ID of the action to get.
+	 * ---
+	 * default: 0
+	 * ---
 	 *
 	 * [--field=<field>]
 	 * : Instead of returning the whole action, returns the value of a single field.
@@ -326,6 +332,9 @@ class Action {
 	 *
 	 * <id>...
 	 * : One or more IDs of actions to run.
+	 * ---
+	 * default: 0
+	 * ---
 	 *
 	 * ## EXAMPLES
 	 *
