@@ -3,7 +3,6 @@
 namespace AS_CLI;
 use AS_CLI\Commands\Action\Action;
 use AS_CLI\Commands\System\System;
-use function \WP_CLI\Utils\get_flag_value;
 
 class Plugin {
 

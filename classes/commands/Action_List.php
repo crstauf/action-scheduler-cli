@@ -2,7 +2,6 @@
 
 namespace AS_CLI\Commands\Action;
 use AS_CLI\Commands\Command_Abstract;
-use function \WP_CLI\Utils\get_flag_value;
 
 class Action_List extends Command_Abstract {
 

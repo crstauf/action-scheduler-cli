@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Action Scheduler CLI
  * Description: Registers WP-CLI commands for Action Scheduler plugin.
- * Version: 0.1.0
+ * Version: 1.0.0
  * Author: Caleb Stauffer
  * Author URI: https://develop.calebstauffer.com
  */

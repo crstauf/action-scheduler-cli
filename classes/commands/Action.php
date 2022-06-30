@@ -1,7 +1,6 @@
 <?php declare( strict_types=1 );
 
 namespace AS_CLI\Commands\Action;
-use function \WP_CLI\Utils\get_flag_value;
 
 class Action {
 
